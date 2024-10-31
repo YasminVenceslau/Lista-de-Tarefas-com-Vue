@@ -1,5 +1,8 @@
 <script setup>
   import {reactive} from 'vue';
+  import Cabecalho from './components/Cabecalho.vue'
+  import Formulario from './components/Formulario.vue'
+  import ListaDetarefas from './components/ListaDetarefas.vue'
   
   const estado = reactive({
     filtro: 'todas',
@@ -55,57 +58,14 @@
 </script>
 
 <template >
-<div class="container ">
+<div class="container "> 
 
-  <header class="p-5 mb-4 mt-4 bg-info bg-gradient rounded-3">
-    <h1>
-      Minhas Tarefas
-    </h1>
-    <p>
-      Você possui {{ getTarefasPendentes().length }} tarefas pendentes
-    </p>
-  </header>
-
-  <form @submit.prevent="CadastrarTarefa">
-    <div class="row">
-
-      <div class="col">
-        <input :value="estado.tarefaTemp"  @change="evento => estado.tarefaTemp = evento.target.value" required type="text" placeholder="Digite aqui a descrição da tarefa" class="form-control">
-      </div>
-
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-outline-info">Cadastrar</button>
-      </div>
-
-      <div class="col-md-2">
-        <select @change="evento => estado.filtro = evento.target.value" class="form-control">
-
-          <option value="todas">Todas as tarefas</option>
-
-          <option value="Pendentes">Tarefas Pendentes</option>
-
-          <option value="finalizadas">Tarefas finalizadas</option>
-
-        </select>
-      </div>
-    </div>
-  </form>
+  <Cabecalho :tarefas-pendentes="getTarefasPendentes().length" />
+  <Formulario :trocar-filtro="evento => estado.filtro = evento.target.value" :tarefa-temp="estado.tarefaTemp" :edita-tarefa-temp="evento => estado.tarefaTemp = evento.target.value" :cadastrar-tarefa="CadastrarTarefa"/>
+  <ListaDetarefas :tarefas="getTarefasFiltradas()"/>
 
 
-
-  <ul class="list-group mt-4 ">
-    <li class="list-group-item list-group-item-info" v-for="tarefa in  getTarefasFiltradas()">
-      <input @change="evento => tarefa.finalizadas = evento.target.checked"  :checked="tarefa.finalizadas" :id="tarefa.titulo" type="checkbox" >
-      <label :class="{done: tarefa.finalizadas }" class="ms-3 " :for="tarefa.titulo">
-        {{ tarefa.titulo }}
-      </label>
-    </li>
-  </ul>
 </div>
 </template>
 
-<style scoped>
-.done{
-  text-decoration: line-through;
-}
-</style>
+
